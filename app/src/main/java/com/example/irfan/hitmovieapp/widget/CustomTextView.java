@@ -14,8 +14,6 @@ import com.example.irfan.hitmovieapp.R;
  * Created by irfan on 05/05/16.
  */
 public class CustomTextView extends TextView {
-    public static final String ANDROID_SCHEMA = "http://schemas.android.com/apk/res/android";
-
     public CustomTextView(Context context) {
         super(context);
         applyFont(null);
