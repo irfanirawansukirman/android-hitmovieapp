@@ -5,4 +5,10 @@
 
     <!-- font -->
     <string name="font_source_sans_reg">SourceSansPro-Regular.otf</string>
+    <string name="vote_average">Vote Average :</string>
+    <string name="release_date">Release Date :</string>
+    <string name="description_title">Description</string>
+    <string name="comments_title">Comments</string>
+    <string name="release_date_title">Release Date</string>
+    <string name="title_title">Title</string>
 </resources>

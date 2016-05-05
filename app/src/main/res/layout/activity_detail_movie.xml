@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.example.irfan.hitmovieapp.view.activity.DetailMovieActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/myappbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/mycollapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            android:background="@android:color/transparent"
+            app:contentScrim="@android:color/transparent"
+            app:expandedTitleMarginBottom="32dp"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <ImageView
+                android:id="@+id/myimg_backdrop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:layout_collapseMode="parallax"
+                android:adjustViewBounds="true" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/mytoolbar_detail_movie"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"/>
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/mynested"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp">
+
+                <ImageView
+                    android:id="@+id/myimg_detail_cover"
+                    android:layout_width="wrap_content"
+                    android:layout_height="215dp"
+                    android:adjustViewBounds="true" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="16dp">
+
+                    <com.example.irfan.hitmovieapp.widget.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_title"
+                        android:textColor="@color/textColorPrimary"
+                        android:textSize="16sp"
+                        app:font="@string/font_source_sans_reg" />
+
+                    <com.example.irfan.hitmovieapp.widget.CustomTextView
+                        android:id="@+id/mytxt_detail_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/textColorSecondary"
+                        android:textSize="16sp"
+                        app:font="@string/font_source_sans_reg" />
+
+                    <com.example.irfan.hitmovieapp.widget.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/release_date_title"
+                        android:textColor="@color/textColorPrimary"
+                        android:textSize="16sp"
+                        app:font="@string/font_source_sans_reg" />
+
+                    <com.example.irfan.hitmovieapp.widget.CustomTextView
+                        android:id="@+id/mytxt_detail_release_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/textColorSecondary"
+                        android:textSize="14sp"
+                        app:font="@string/font_source_sans_reg" />
+
+                    <com.example.irfan.hitmovieapp.widget.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Vote Average"
+                        android:textColor="@color/textColorPrimary"
+                        android:textSize="16sp"
+                        app:font="@string/font_source_sans_reg" />
+
+                    <com.example.irfan.hitmovieapp.widget.CustomTextView
+                        android:id="@+id/mytxt_detail_vote"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/textColorSecondary"
+                        android:textSize="14sp"
+                        app:font="@string/font_source_sans_reg" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.example.irfan.hitmovieapp.widget.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:text="@string/description_title"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="16sp"
+                app:font="@string/font_source_sans_reg" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/textColorPrimary" />
+
+            <com.example.irfan.hitmovieapp.widget.CustomTextView
+                android:id="@+id/mytxt_detail_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="2dp"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:textColor="@color/textColorSecondary"
+                android:textSize="16sp"
+                app:font="@string/font_source_sans_reg" />
+
+            <com.example.irfan.hitmovieapp.widget.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:text="Videos"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="16sp"
+                app:font="@string/font_source_sans_reg" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/textColorPrimary" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/myrec_detail_video"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.example.irfan.hitmovieapp.widget.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:text="@string/comments_title"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="16sp"
+                app:font="@string/font_source_sans_reg" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/textColorPrimary" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/myrec_detail_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"/>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

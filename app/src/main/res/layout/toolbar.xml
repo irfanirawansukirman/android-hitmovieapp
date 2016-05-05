@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mytoolbar"
     android:layout_width="match_parent"
     android:background="@color/colorPrimary"
     android:layout_height="?attr/actionBarSize"
@@ -17,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:text="HIT Movie Apps"
+            android:text="HITS Movie List"
             android:textColor="@color/textColorHeader" />
     </LinearLayout>
 </android.support.v7.widget.Toolbar>
