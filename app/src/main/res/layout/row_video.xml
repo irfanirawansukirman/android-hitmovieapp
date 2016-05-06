@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:paddingTop="16dp"
-    android:paddingBottom="16dp" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <ImageView
-        android:src="@mipmap/ic_launcher"
-        android:layout_width="100dp"
-        android:layout_height="100dp" />
+        android:id="@+id/img_detail_trailer"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"/>
 
     <com.example.irfan.hitmovieapp.widget.CustomTextView
         android:id="@+id/mytxt_detail_video_title"
@@ -16,9 +18,10 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:textSize="16sp"
-        android:paddingLeft="16dp"
+        android:padding="16dp"
+        android:clickable="true"
+        android:background="?attr/selectableItemBackground"
         android:text="Lorem"
         android:textColor="@color/textColorSecondary"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"/>
+        app:font="@string/font_source_sans_reg"/>
 </LinearLayout>

@@ -8,6 +8,7 @@
     tools:context=".view.activity.MainActivity">
 
     <include
+        android:id="@+id/mytoolbar_home"
         layout="@layout/toolbar" />
 
     <FrameLayout
@@ -24,7 +25,7 @@
     </FrameLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/myrec"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
 </LinearLayout>

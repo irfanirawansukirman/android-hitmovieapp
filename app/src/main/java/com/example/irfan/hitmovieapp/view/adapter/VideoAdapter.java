@@ -5,10 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.irfan.hitmovieapp.R;
+import com.example.irfan.hitmovieapp.model.TrailerDao;
 import com.example.irfan.hitmovieapp.model.VideoDao;
+import com.example.irfan.hitmovieapp.util.Constant;
 import com.example.irfan.hitmovieapp.widget.CustomTextView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +25,10 @@ import butterknife.ButterKnife;
  */
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.MyViewHolder> {
     private Context mContext;
-    private List<VideoDao> mData = new ArrayList<>();
-    private VideoDao mItem;
+    private List<TrailerDao.Trailers.Youtube> mData = new ArrayList<>();
+    private TrailerDao.Trailers.Youtube mItem;
 
-    public VideoAdapter(Context mContext, List<VideoDao> mData){
+    public VideoAdapter(Context mContext, List<TrailerDao.Trailers.Youtube> mData){
         this.mContext=mContext;
         this.mData=mData;
     }
@@ -39,6 +43,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.MyViewHolder
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         mItem = mData.get(position);
+
+        holder.mTxtTitle.setText(mItem.getName());
+        Picasso.with(holder.mImgTrailer.getContext()).load(Constant.BASE_YOUTUBE_URL + mItem.getSource() + Constant.BASE_YOUTUBE_QUALITY).into(holder.mImgTrailer);
     }
 
     @Override
@@ -49,6 +56,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.MyViewHolder
     public class MyViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.mytxt_detail_video_title)
         CustomTextView mTxtTitle;
+        @BindView(R.id.img_detail_trailer)
+        ImageView mImgTrailer;
 
         public MyViewHolder(View itemView) {
             super(itemView);

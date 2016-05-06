@@ -20,18 +20,25 @@
             android:fitsSystemWindows="true"
             android:background="@android:color/transparent"
             app:contentScrim="@android:color/transparent"
-            app:expandedTitleMarginBottom="32dp"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="48dp"
+            app:expandedTitleMarginBottom="16dp"
+            app:expandedTitleMarginStart="16dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <RelativeLayout
+                android:id="@+id/rel_container_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/myimg_backdrop"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_pics"
                 app:layout_collapseMode="parallax"
                 android:adjustViewBounds="true" />
+            </RelativeLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/mytoolbar_detail_movie"
@@ -88,7 +95,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="4dp"
                         android:textColor="@color/textColorSecondary"
                         android:textSize="16sp"
                         app:font="@string/font_source_sans_reg" />
@@ -106,7 +113,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="4dp"
                         android:textColor="@color/textColorSecondary"
                         android:textSize="14sp"
                         app:font="@string/font_source_sans_reg" />
@@ -124,7 +131,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="4dp"
                         android:textColor="@color/textColorSecondary"
                         android:textSize="14sp"
                         app:font="@string/font_source_sans_reg" />
@@ -173,12 +180,13 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/myrec_detail_video"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
 
             <com.example.irfan.hitmovieapp.widget.CustomTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="16dp"
+                android:paddingTop="16dp"
                 android:text="@string/comments_title"
                 android:textColor="@color/textColorPrimary"
                 android:textSize="16sp"

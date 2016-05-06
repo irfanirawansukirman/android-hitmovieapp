@@ -2,7 +2,9 @@ package com.example.irfan.hitmovieapp.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,14 +12,18 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.example.irfan.hitmovieapp.R;
+import com.example.irfan.hitmovieapp.controller.MovieService;
 import com.example.irfan.hitmovieapp.model.MovieDao;
+import com.example.irfan.hitmovieapp.model.TrailerDao;
 import com.example.irfan.hitmovieapp.model.VideoDao;
 import com.example.irfan.hitmovieapp.util.Constant;
 import com.example.irfan.hitmovieapp.view.adapter.VideoAdapter;
@@ -29,6 +35,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DetailMovieActivity extends AppCompatActivity {
     @BindView(R.id.myimg_backdrop)
@@ -53,13 +64,25 @@ public class DetailMovieActivity extends AppCompatActivity {
     CollapsingToolbarLayout mCollapsingToolbar;
     @BindView(R.id.mynested)
     NestedScrollView mNestedScroll;
+    @BindView(R.id.rel_container_img)
+    RelativeLayout mRelContainer;
 
+    public static final String EXTRA_IMAGE = "DetailActivity:image";
+    public static final String EXTRA_BACKDROP = "url_backdrop";
+    public static final String EXTRA_TITLE = "title";
+    public static final String EXTRA_DATE = "date";
+    public static final String EXTRA_VOTE = "vote";
+    public static final String EXTRA_DESCRIPTION = "description";
     public static final String DATA_MODEL = "model";
     public static final String DATA_POS = "position";
 
+    private String mUrlCover, mUrlBackdrop, mTitle, mReleaseDate, mVote, mDescription, mId;
     private MovieDao mMovieItem;
-    private List<VideoDao> mVideoItem;
+    private List<TrailerDao> mTrailesData = new ArrayList<>();
+    private List<TrailerDao.Trailers.Youtube> mDataYoutube = new ArrayList<>();
     private VideoAdapter mAdapter;
+    private int mHeight=0;
+    private int mResult=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +91,27 @@ public class DetailMovieActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         /**
+         * Setting for default backdrop image
+         */
+        DisplayMetrics mDisplayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
+        mHeight = mDisplayMetrics.heightPixels;
+        mResult = (int) (mHeight * 0.3165);
+        mRelContainer.getLayoutParams().height = mResult;
+        mImgBackdrop.setImageResource(R.mipmap.ic_pics);
+
+        /**
          * Get data model from intent
          */
+        mUrlCover = getIntent().getStringExtra(EXTRA_IMAGE);
+        mUrlBackdrop = getIntent().getStringExtra(EXTRA_BACKDROP);
+        mTitle = getIntent().getStringExtra(EXTRA_TITLE);
+        mReleaseDate = getIntent().getStringExtra(EXTRA_DATE);
+        mVote = getIntent().getStringExtra(EXTRA_VOTE);
+        mDescription = getIntent().getStringExtra(EXTRA_DESCRIPTION);
         mMovieItem = (MovieDao) getIntent().getSerializableExtra(DATA_MODEL);
-        initDetail(mMovieItem);
+        initDetail(mMovieItem, mUrlCover, mUrlBackdrop,
+                mTitle, mReleaseDate, mVote, mDescription, String.valueOf(mMovieItem.getId()));
 
         /**
          * Set smooth when scroll
@@ -82,67 +122,95 @@ public class DetailMovieActivity extends AppCompatActivity {
     public void initToolbar(String mTitle){
         if (mToolbar!=null){
             setSupportActionBar(mToolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
     }
 
-    public void initDetail(MovieDao mItem){
+    public void initDetail(MovieDao mItem, String mUrlCover,
+                           String mUrlBackdrop, String mTitle,
+                           String mReleaseDate, String mVote,
+                           String mDescription, String mId){
         /**
-         * Set toolbar title
+         * Init view
          */
         initToolbar(mItem.title);
-        mCollapsingToolbar.setTitle(mItem.getTitle());
+        initListWidget();
 
-        Picasso.with(DetailMovieActivity.this).load(Constant.BASE_POSTER_URL + mItem.getPoster_path()).into(mImgCover);
-        Picasso.with(DetailMovieActivity.this).load(Constant.BASE_BACKDROP_URL + mItem.getBackdrop_path()).placeholder(R.mipmap.ic_launcher).into(mImgBackdrop);
-        mTxtTitle.setText(mItem.getTitle());
-        mTxtReleaseDate.setText(mItem.getRelease_date());
-        mTxtVote.setText(String.valueOf(mItem.getVote_average()));
-        mTxtDescription.setText(mItem.getOverview());
+        /**
+         * Set collapsing
+         */
+        mCollapsingToolbar.setTitle(mItem.getTitle());
+        mCollapsingToolbar.setExpandedTitleColor(getResources().getColor(R.color.colorWhite));
+        mCollapsingToolbar.setCollapsedTitleTextColor(getResources().getColor(R.color.colorWhite));
+        mCollapsingToolbar.setExpandedTitleTypeface(Typeface.createFromAsset(getAssets(), "fonts/" + getString(R.string.font_source_sans_reg)));
+        mCollapsingToolbar.setCollapsedTitleTypeface(Typeface.createFromAsset(getAssets(), "fonts/" + getString(R.string.font_source_sans_reg)));
+
+        /**
+         * Set view items in detail page
+         */
+        ViewCompat.setTransitionName(mImgCover, EXTRA_IMAGE);
+        ViewCompat.setTransitionName(mImgBackdrop, EXTRA_BACKDROP);
+        ViewCompat.setTransitionName(mTxtTitle, EXTRA_TITLE);
+        ViewCompat.setTransitionName(mTxtReleaseDate, EXTRA_DATE);
+        ViewCompat.setTransitionName(mTxtVote, EXTRA_VOTE);
+        ViewCompat.setTransitionName(mTxtDescription, EXTRA_DESCRIPTION);
+        Picasso.with(DetailMovieActivity.this).load(Constant.BASE_POSTER_URL + mUrlCover).into(mImgCover);
+        Picasso.with(DetailMovieActivity.this).load(Constant.BASE_BACKDROP_URL + mUrlBackdrop).into(mImgBackdrop);
+        mTxtTitle.setText(mTitle);
+        mTxtReleaseDate.setText(mReleaseDate);
+        mTxtVote.setText(mVote);
+        mTxtDescription.setText(mDescription);
 
         /**
          * Set trailer video
          */
-        initVideo();
+        initVideo(mId);
 
         /**
          * Set comment video
          */
-        initComment();
+//        initComment();
     }
 
-    public void initVideo(){
-        mVideoItem = new ArrayList<>();
-        mVideoItem.add(new VideoDao("Lorem Ipsum"));
-        mVideoItem.add(new VideoDao("Lorem Ipsum"));
-        mVideoItem.add(new VideoDao("Lorem Ipsum"));
-        mVideoItem.add(new VideoDao("Lorem Ipsum"));
-        mVideoItem.add(new VideoDao("Lorem Ipsum"));
-        mVideoItem.add(new VideoDao("Lorem Ipsum"));
-        mVideoItem.add(new VideoDao("Lorem Ipsum"));
-        mVideoItem.add(new VideoDao("Lorem Ipsum"));
-
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-//        mLayoutManager.setAutoMeasureEnabled(true);
-        mRecVideo.setLayoutManager(mLayoutManager);
+    public void initListWidget(){
+        //        mLayoutManager.setAutoMeasureEnabled(true);
+        mRecVideo.setLayoutManager(new LinearLayoutManager(DetailMovieActivity.this));
         mRecVideo.setHasFixedSize(true);
         mRecVideo.setNestedScrollingEnabled(false);
         mRecVideo.setItemAnimator(new DefaultItemAnimator());
-        mAdapter = new VideoAdapter(DetailMovieActivity.this, mVideoItem);
-        mRecVideo.setAdapter(mAdapter);
+    }
+
+    public void initVideo(String id){
+        Log.e("MY ID ", id);
+        Retrofit mRequest = new Retrofit.Builder()
+                .baseUrl(Constant.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        MovieService mService = mRequest.create(MovieService.class);
+        Call<TrailerDao> mCall = mService.callTrailersMovie(id);
+        mCall.enqueue(new Callback<TrailerDao>() {
+            @Override
+            public void onResponse(Call<TrailerDao> call, Response<TrailerDao> response) {
+                for (int i=0;i<response.body().getTrailers().getYoutube().size(); i++){
+                    Log.e("YOUTUBE ", response.body().getTrailers().getYoutube().get(i).getSource());
+                }
+                mDataYoutube.clear();
+                mDataYoutube.addAll(response.body().getTrailers().getYoutube());
+                mAdapter = new VideoAdapter(DetailMovieActivity.this, mDataYoutube);
+                mRecVideo.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<TrailerDao> call, Throwable t) {
+                Log.e("ERROR EY ", t.getMessage());
+            }
+        });
     }
 
     public void initComment(){
-        mVideoItem = new ArrayList<>();
-        mVideoItem.add(new VideoDao("Lorem Ipsum"));
-        mVideoItem.add(new VideoDao("Lorem Ipsum"));
-        mVideoItem.add(new VideoDao("Lorem Ipsum"));
-        mVideoItem.add(new VideoDao("Lorem Ipsum"));
-        mVideoItem.add(new VideoDao("Lorem Ipsum"));
-        mVideoItem.add(new VideoDao("Lorem Ipsum"));
-        mVideoItem.add(new VideoDao("Lorem Ipsum"));
-        mVideoItem.add(new VideoDao("Lorem Ipsum"));
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
 //        mLayoutManager.setAutoMeasureEnabled(true);
@@ -150,7 +218,7 @@ public class DetailMovieActivity extends AppCompatActivity {
         mRecVideo.setHasFixedSize(true);
         mRecComment.setNestedScrollingEnabled(false);
         mRecComment.setItemAnimator(new DefaultItemAnimator());
-        mAdapter = new VideoAdapter(DetailMovieActivity.this, mVideoItem);
+//        mAdapter = new VideoAdapter(DetailMovieActivity.this, mVideoItem);
         mRecComment.setAdapter(mAdapter);
     }
 
