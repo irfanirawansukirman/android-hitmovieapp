@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lin_row_video"
     android:orientation="horizontal"
     android:paddingBottom="8dp"
     android:paddingTop="8dp"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -20,8 +23,6 @@
         android:gravity="center_vertical"
         android:textSize="16sp"
         android:padding="16dp"
-        android:clickable="true"
-        android:background="?attr/selectableItemBackground"
         android:text="Lorem"
         android:textColor="@color/textColorSecondary"
         app:font="@string/font_source_sans_reg"/>

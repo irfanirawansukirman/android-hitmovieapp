@@ -1,11 +1,14 @@
 package com.example.irfan.hitmovieapp.view.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.example.irfan.hitmovieapp.R;
 import com.example.irfan.hitmovieapp.model.TrailerDao;
@@ -44,8 +47,14 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.MyViewHolder
     public void onBindViewHolder(MyViewHolder holder, int position) {
         mItem = mData.get(position);
 
+        Picasso.with(holder.mImgTrailer.getContext()).load(Constant.BASE_YOUTUBE_IMAGE_URL + mItem.getSource() + Constant.BASE_YOUTUBE_QUALITY).into(holder.mImgTrailer);
         holder.mTxtTitle.setText(mItem.getName());
-        Picasso.with(holder.mImgTrailer.getContext()).load(Constant.BASE_YOUTUBE_URL + mItem.getSource() + Constant.BASE_YOUTUBE_QUALITY).into(holder.mImgTrailer);
+        holder.mLinItemContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Constant.BASE_YOUTUBE_VIDEO_URL + mItem.getSource())));
+            }
+        });
     }
 
     @Override
@@ -58,6 +67,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.MyViewHolder
         CustomTextView mTxtTitle;
         @BindView(R.id.img_detail_trailer)
         ImageView mImgTrailer;
+        @BindView(R.id.lin_row_video)
+        LinearLayout mLinItemContainer;
 
         public MyViewHolder(View itemView) {
             super(itemView);

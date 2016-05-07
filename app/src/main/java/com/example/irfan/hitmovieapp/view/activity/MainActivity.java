@@ -1,18 +1,26 @@
 package com.example.irfan.hitmovieapp.view.activity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.example.irfan.hitmovieapp.R;
 import com.example.irfan.hitmovieapp.controller.MovieService;
@@ -43,16 +51,33 @@ public class MainActivity extends AppCompatActivity {
     FrameLayout mFrmContainer;
     @BindView(R.id.mytoolbar_home)
     Toolbar mToolbar;
+    @BindView(R.id.lin_header)
+    LinearLayout mLinearHeader;
+    @BindView(R.id.drawer_main)
+    DrawerLayout mDrawerLayout;
+    @BindView(R.id.navigation_main)
+    NavigationView mNavigationView;
 
+    private ActionBarDrawerToggle mDrawerToggle;
     private MovieAdapter mAdapter;
     private List<MovieDao> mData = new ArrayList<>();
     private MovieDao mItem;
+    private int mHeight =0;
+    private int mResult=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        /**
+         * Setting for navigation header
+         */
+        DisplayMetrics mDisplayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
+        mHeight = mDisplayMetrics.heightPixels;
+        mResult = (int) (mHeight * 0.3165);
+        mLinearHeader.getLayoutParams().height = mResult;
 
         /**
          * init toolbar
@@ -113,9 +138,29 @@ public class MainActivity extends AppCompatActivity {
     public void initToolbar(){
         if (mToolbar!=null){
             setSupportActionBar(mToolbar);
+
+            /**
+             * Navigation default
+             */
+//            mToolbar.setNavigationIcon(R.mipmap.ic_menu);
+//            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    mDrawerLayout.openDrawer(GravityCompat.START);
+//                }
+//            });
+
+            /**
+             * Navigation with animation
+             */
+            mDrawerToggle = setupDrawerToggle();
+            mDrawerLayout.addDrawerListener(mDrawerToggle);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+    }
+
+    private ActionBarDrawerToggle setupDrawerToggle(){
+        return new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close);
     }
 
     public void loadData(){
@@ -189,6 +234,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
         switch (item.getItemId()) {
             case R.id.action_popular:
                 mFrmContainer.setVisibility(View.VISIBLE);
@@ -200,5 +249,19 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggles
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 }

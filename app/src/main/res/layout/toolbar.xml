@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:text="HITS Movie List"
+            android:text="HITS Movie"
             android:textColor="@color/textColorHeader" />
     </LinearLayout>
 </android.support.v7.widget.Toolbar>
