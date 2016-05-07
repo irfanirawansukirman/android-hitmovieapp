@@ -2,6 +2,7 @@ package com.example.irfan.hitmovieapp.controller;
 
 import com.example.irfan.hitmovieapp.model.BaseDao;
 import com.example.irfan.hitmovieapp.model.MovieDao;
+import com.example.irfan.hitmovieapp.model.ReviewDao;
 import com.example.irfan.hitmovieapp.model.TrailerDao;
 
 import java.util.List;
@@ -31,4 +32,10 @@ public interface MovieService {
      */
     @GET("/3/movie/{id}?api_key=1b2f29d43bf2e4f3142530bc6929d341&append_to_response=trailers")
     Call<TrailerDao> callTrailersMovie(@Path("id") String id);
+
+    /**
+     * GET REVIEWS MOVIE BY ID
+     */
+    @GET("/3/movie/{id}/reviews?api_key=1b2f29d43bf2e4f3142530bc6929d341")
+    Call<ReviewDao> getReviewMovie(@Path("id") String id);
 }

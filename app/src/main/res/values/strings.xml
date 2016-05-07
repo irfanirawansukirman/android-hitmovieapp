@@ -5,10 +5,12 @@
 
     <!-- font -->
     <string name="font_source_sans_reg">SourceSansPro-Regular.otf</string>
-    <string name="vote_average">Vote Average :</string>
-    <string name="release_date">Release Date :</string>
-    <string name="description_title">Description</string>
-    <string name="comments_title">Comments</string>
+    <string name="font_source_sans_it">SourceSansPro-It.otf</string>
+    <string name="vote_average_title">Vote Average</string>
     <string name="release_date_title">Release Date</string>
+    <string name="description_title">Description</string>
+    <string name="reviews_title">Reviews</string>
     <string name="title_title">Title</string>
+    <string name="trailers_movie_title">Trailers Movie</string>
+    <string name="not_available">Not Available</string>
 </resources>

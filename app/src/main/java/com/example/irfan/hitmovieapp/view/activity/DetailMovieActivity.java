@@ -23,9 +23,11 @@ import android.widget.RelativeLayout;
 import com.example.irfan.hitmovieapp.R;
 import com.example.irfan.hitmovieapp.controller.MovieService;
 import com.example.irfan.hitmovieapp.model.MovieDao;
+import com.example.irfan.hitmovieapp.model.ReviewDao;
 import com.example.irfan.hitmovieapp.model.TrailerDao;
 import com.example.irfan.hitmovieapp.model.VideoDao;
 import com.example.irfan.hitmovieapp.util.Constant;
+import com.example.irfan.hitmovieapp.view.adapter.ReviewAdapter;
 import com.example.irfan.hitmovieapp.view.adapter.VideoAdapter;
 import com.example.irfan.hitmovieapp.widget.CustomTextView;
 import com.squareup.picasso.Picasso;
@@ -54,12 +56,18 @@ public class DetailMovieActivity extends AppCompatActivity {
     CustomTextView mTxtVote;
     @BindView(R.id.mytxt_detail_description)
     CustomTextView mTxtDescription;
+    @BindView(R.id.mytxt_notif_review)
+    CustomTextView mTxtNotifReview;
+    @BindView(R.id.mytxt_notif_description)
+    CustomTextView mTxtNotifDescription;
+    @BindView(R.id.mytxt_notif_video)
+    CustomTextView mTxtNotifVideo;
     @BindView(R.id.mytoolbar_detail_movie)
     Toolbar mToolbar;
     @BindView(R.id.myrec_detail_video)
     RecyclerView mRecVideo;
     @BindView(R.id.myrec_detail_comment)
-    RecyclerView mRecComment;
+    RecyclerView mRecReview;
     @BindView(R.id.mycollapsing_toolbar)
     CollapsingToolbarLayout mCollapsingToolbar;
     @BindView(R.id.mynested)
@@ -80,7 +88,9 @@ public class DetailMovieActivity extends AppCompatActivity {
     private MovieDao mMovieItem;
     private List<TrailerDao> mTrailesData = new ArrayList<>();
     private List<TrailerDao.Trailers.Youtube> mDataYoutube = new ArrayList<>();
+    private List<ReviewDao.Results> mDataReview = new ArrayList<>();
     private VideoAdapter mAdapter;
+    private ReviewAdapter mReviewAdapter;
     private int mHeight=0;
     private int mResult=0;
 
@@ -160,7 +170,12 @@ public class DetailMovieActivity extends AppCompatActivity {
         mTxtTitle.setText(mTitle);
         mTxtReleaseDate.setText(mReleaseDate);
         mTxtVote.setText(mVote);
-        mTxtDescription.setText(mDescription);
+        if (mDescription.equals("")){
+            mTxtDescription.setVisibility(View.GONE);
+            mTxtNotifDescription.setVisibility(View.VISIBLE);
+        } else {
+            mTxtDescription.setText(mDescription);
+        }
 
         /**
          * Set trailer video
@@ -170,15 +185,27 @@ public class DetailMovieActivity extends AppCompatActivity {
         /**
          * Set comment video
          */
-//        initComment();
+        initComment(mId);
     }
 
     public void initListWidget(){
+        /**
+         * List for trailer movie
+         */
         //        mLayoutManager.setAutoMeasureEnabled(true);
         mRecVideo.setLayoutManager(new LinearLayoutManager(DetailMovieActivity.this));
         mRecVideo.setHasFixedSize(true);
         mRecVideo.setNestedScrollingEnabled(false);
         mRecVideo.setItemAnimator(new DefaultItemAnimator());
+
+        /**
+         * List for review movie
+         */
+        //        mLayoutManager.setAutoMeasureEnabled(true);
+        mRecReview.setLayoutManager(new LinearLayoutManager(DetailMovieActivity.this));
+        mRecReview.setHasFixedSize(true);
+        mRecReview.setNestedScrollingEnabled(false);
+        mRecReview.setItemAnimator(new DefaultItemAnimator());
     }
 
     public void initVideo(String id){
@@ -196,11 +223,17 @@ public class DetailMovieActivity extends AppCompatActivity {
                 for (int i=0;i<response.body().getTrailers().getYoutube().size(); i++){
                     Log.e("YOUTUBE ", response.body().getTrailers().getYoutube().get(i).getSource());
                 }
-                mDataYoutube.clear();
-                mDataYoutube.addAll(response.body().getTrailers().getYoutube());
-                mAdapter = new VideoAdapter(DetailMovieActivity.this, mDataYoutube);
-                mRecVideo.setAdapter(mAdapter);
-                mAdapter.notifyDataSetChanged();
+
+                if (response.body().getTrailers().getYoutube().size() == 0){
+                    mRecVideo.setVisibility(View.GONE);
+                    mTxtNotifVideo.setVisibility(View.VISIBLE);
+                } else {
+                    mDataYoutube.clear();
+                    mDataYoutube.addAll(response.body().getTrailers().getYoutube());
+                    mAdapter = new VideoAdapter(DetailMovieActivity.this, mDataYoutube);
+                    mRecVideo.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -210,16 +243,38 @@ public class DetailMovieActivity extends AppCompatActivity {
         });
     }
 
-    public void initComment(){
+    public void initComment(String id){
+        Retrofit mRequest = new Retrofit.Builder()
+                .baseUrl(Constant.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-//        mLayoutManager.setAutoMeasureEnabled(true);
-        mRecComment.setLayoutManager(mLayoutManager);
-        mRecVideo.setHasFixedSize(true);
-        mRecComment.setNestedScrollingEnabled(false);
-        mRecComment.setItemAnimator(new DefaultItemAnimator());
-//        mAdapter = new VideoAdapter(DetailMovieActivity.this, mVideoItem);
-        mRecComment.setAdapter(mAdapter);
+        MovieService mService = mRequest.create(MovieService.class);
+        Call<ReviewDao> mCall = mService.getReviewMovie(id);
+        mCall.enqueue(new Callback<ReviewDao>() {
+            @Override
+            public void onResponse(Call<ReviewDao> call, Response<ReviewDao> response) {
+                for (int i=0; i<response.body().getResults().size();i++){
+                    Log.e("REVIEW ", response.body().getResults().get(i).getAuthor());
+                }
+
+                if (response.body().getResults().size() == 0){
+                    mRecReview.setVisibility(View.GONE);
+                    mTxtNotifReview.setVisibility(View.VISIBLE);
+                } else {
+                    mDataReview.clear();
+                    mDataReview.addAll(response.body().getResults());
+                    mReviewAdapter = new ReviewAdapter(DetailMovieActivity.this, mDataReview);
+                    mRecReview.setAdapter(mReviewAdapter);
+                    mReviewAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ReviewDao> call, Throwable t) {
+                Log.e("ERROR EY ", t.getMessage());
+            }
+        });
     }
 
     @Override

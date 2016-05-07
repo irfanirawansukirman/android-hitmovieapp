@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/colorWhite"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context="com.example.irfan.hitmovieapp.view.activity.DetailMovieActivity">
@@ -121,7 +122,7 @@
                     <com.example.irfan.hitmovieapp.widget.CustomTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Vote Average"
+                        android:text="@string/vote_average_title"
                         android:textColor="@color/textColorPrimary"
                         android:textSize="16sp"
                         app:font="@string/font_source_sans_reg" />
@@ -164,10 +165,22 @@
                 app:font="@string/font_source_sans_reg" />
 
             <com.example.irfan.hitmovieapp.widget.CustomTextView
+                android:id="@+id/mytxt_notif_description"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/not_available"
+                android:textSize="16sp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                app:font="@string/font_source_sans_reg"
+                android:textColor="@color/textColorSecondary"/>
+
+            <com.example.irfan.hitmovieapp.widget.CustomTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="16dp"
-                android:text="Videos"
+                android:text="@string/trailers_movie_title"
                 android:textColor="@color/textColorPrimary"
                 android:textSize="16sp"
                 app:font="@string/font_source_sans_reg" />
@@ -180,14 +193,27 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/myrec_detail_video"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"/>
+
+            <com.example.irfan.hitmovieapp.widget.CustomTextView
+                android:id="@+id/mytxt_notif_video"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/not_available"
+                android:textSize="16sp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                app:font="@string/font_source_sans_reg"
+                android:textColor="@color/textColorSecondary"/>
 
             <com.example.irfan.hitmovieapp.widget.CustomTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="16dp"
-                android:paddingTop="16dp"
-                android:text="@string/comments_title"
+                android:text="@string/reviews_title"
                 android:textColor="@color/textColorPrimary"
                 android:textSize="16sp"
                 app:font="@string/font_source_sans_reg" />
@@ -201,8 +227,20 @@
                 android:id="@+id/myrec_detail_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"/>
+
+            <com.example.irfan.hitmovieapp.widget.CustomTextView
+                android:id="@+id/mytxt_notif_review"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/not_available"
+                android:textSize="16sp"
+                android:paddingTop="16dp"
                 android:paddingBottom="16dp"
-                android:paddingTop="16dp"/>
+                app:font="@string/font_source_sans_reg"
+                android:textColor="@color/textColorSecondary"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

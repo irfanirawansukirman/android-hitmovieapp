@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="8dp"
+    android:paddingTop="8dp">
+
+    <com.example.irfan.hitmovieapp.widget.CustomTextView
+        android:id="@+id/mytxt_detail_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:text="Lorem"
+        android:textColor="@color/textColorPrimary"
+        android:textSize="16sp"
+        app:font="@string/font_source_sans_it" />
+
+    <com.example.irfan.hitmovieapp.widget.CustomTextView
+        android:id="@+id/mytxt_detail_review"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="left"
+        android:lineSpacingExtra="2dp"
+        android:text="@string/dummy_text"
+        android:textColor="@color/textColorSecondary"
+        android:textSize="16sp"
+        app:font="@string/font_source_sans_reg" />
+
+    <com.example.irfan.hitmovieapp.widget.CustomTextView
+        android:id="@+id/mytxt_detail_url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="right"
+        android:lineSpacingExtra="2dp"
+        android:clickable="true"
+        android:background="?attr/selectableItemBackground"
+        android:text="See more..."
+        android:textColor="@color/textColorHeader"
+        android:textSize="16sp"
+        app:font="@string/font_source_sans_it" />
+
+    <View
+        android:id="@+id/view_review"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/textColorPrimary" />
+</LinearLayout>
